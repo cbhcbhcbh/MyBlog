@@ -12,20 +12,24 @@ lint:
 
 .PHONY: run-server
 run-server:
-	poetry run python -m core.manage runserver
+	poetry run python -m manage runserver
 
 .PHONY: migrations
 migrations:
-	poetry run python -m core.manage makemigrations
+	poetry run python -m manage makemigrations
 
 
 .PHONY: migrate
 migrate:
-	poetry run python -m core.manage migrate
+	poetry run python -m manage migrate
 
 .PHONY: superuser
 superuser:
-	poetry run python -m core.manage createsuperuser
+	poetry run python -m manage createsuperuser
+
+.PHONY:
+startapp:
+	poetry run python -m manage startapp $(ARGS)
 
 .PHONY: update
 update: install, migrate;

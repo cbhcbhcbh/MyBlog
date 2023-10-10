@@ -1,7 +1,21 @@
-DEBUG = False
-SECRET_KEY = NotImplemented
+import os
+from pathlib import Path
+from typing import List
 
-ALLOWED_HOSTS = []
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DEBUG = False
+
+ALLOWED_HOSTS = ['127.0.0.1']
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS: List[str] = []
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+SECRET_KEY = 'django-insecure-^41t%2#p5vza1s_61s4)p8etf@@%p6jrtzx%u(vf45^izb=y-6'
 
 
 # Application definition
@@ -13,9 +27,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third party
+    'rest_framework',
+    'corsheaders',
+    'mdeditor',
+
+    # App
+    'blog.apps.BlogConfig',
+    # 'accouts.apps.AccoutsConfig',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -25,12 +50,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'core.MyBlog.urls'
+
+ROOT_URLCONF = 'djangoBlog.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # type: ignore
+        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        ,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -43,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.MyBlog.wsgi.application'
+WSGI_APPLICATION = 'djangoBlog.wsgi.application'
 
 
 # Database
@@ -51,8 +78,12 @@ WSGI_APPLICATION = 'core.MyBlog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'exampledb',
+        'USER': 'dbuser',
+        'PASSWORD': 'FUGH3Veu',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -91,9 +122,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'collectedstatic')
 STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_URL = '/media/'
